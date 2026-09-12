@@ -1,38 +1,62 @@
-<h1 align="center">MJMP v1</h1>
+# MJMP v1
 
-<p align="center"><strong>First public release of MJMP for 64-bit Windows.</strong></p>
-
-## Highlights
-
-- **Portable:** one `MJMPv1.exe`, no installer required.
-- **Self-contained playback stack:** no external codec pack required.
-- **Compatibility first:** D3D11 is selected by default on a fresh configuration, with D3D12 available optionally.
-- **Output precision choices:** 8-bit UNORM, 10-bit RGB and 16-bit-float scRGB.
-- **Tray workflow:** live preview, transport controls, fullscreen expansion and pinning.
-- **Subtitles:** configurable styling with a live preview.
-- **Player workflow:** playlist/history, hotkeys, visibility controls and playback preferences.
-- **Update awareness:** optional GitHub release checking under **Options → Player → Check new versions**.
+MJMP v1 is the initial public binary release for **64-bit Windows**.
 
 ## Release assets
 
-Download both files from the release:
+The release should contain exactly:
 
-- `MJMPv1.exe`
-- `SHA256SUMS.txt`
+```text
+MJMPv1.exe
+SHA256SUMS.txt
+```
 
-## Integrity verification
+`MJMPv1.exe` is the portable application. `SHA256SUMS.txt` contains the SHA-256 checksum for that exact release executable.
+
+## Highlights
+
+- Portable single-file distribution
+- No installer
+- No external codec pack
+- Static MSVC runtime
+- FFmpeg 9.0.1 media stack
+- D3D11 default renderer
+- Optional D3D12 renderer
+- 8-bit, 10-bit and 16-bit-float output allocation modes
+- WASAPI audio output
+- dav1d AV1 path
+- VVdeC VVC / H.266 path
+- libopenmpt tracker/module support
+- Embedded artwork and subtitle infrastructure
+- Tray playback preview
+- Playlist/history workflows
+- Configurable hotkeys and interface visibility
+- GitHub release update checks
+
+## Run
+
+Download `MJMPv1.exe` from the GitHub Release assets and run it directly.
+
+No installation step is required.
+
+## Verify the release
+
+Download both release assets into the same directory and run:
 
 ```powershell
 Get-FileHash .\MJMPv1.exe -Algorithm SHA256
 Get-Content .\SHA256SUMS.txt
 ```
 
-The hashes must match.
+The SHA-256 values must match.
 
-## Installation
+## Update checking
 
-There is no installer. Place `MJMPv1.exe` wherever you want and run it directly.
+When **Check new versions** is enabled under **Options → Player**, MJMP checks this repository for a newer published release. It does not automatically download or execute updates.
 
-## Full changelog
+## Requirements
 
-See [CHANGELOG.md](CHANGELOG.md).
+- 64-bit Windows 10 or Windows 11
+- D3D11-capable GPU/driver for the default renderer
+- D3D12-capable GPU/driver when selecting D3D12
+- Working Windows audio stack

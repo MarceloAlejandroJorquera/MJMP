@@ -1,36 +1,61 @@
 # Changelog
 
+All notable public MJMP binary releases are documented here.
+
 ## v1
+
+Initial public binary release for 64-bit Windows.
 
 ### Distribution
 
-- First public MJMP binary release for 64-bit Windows.
-- Portable single-executable distribution: `MJMPv1.exe`.
-- Static media/dependency stack; no separate codec pack or Visual C++ Redistributable installation is required.
-- Release integrity manifest published as `SHA256SUMS.txt`.
+- Portable single-file application: `MJMPv1.exe`.
+- No installer required.
+- Static media/runtime dependency model.
+- No external codec pack required.
+- No separate Microsoft Visual C++ Redistributable installation required for the release build.
+- SHA-256 release manifest workflow through `SHA256SUMS.txt`.
 
-### Player and playback
+### Rendering
 
-- Custom player interface, context menu and transport ribbon.
-- Playlist, history, seeking, frame/file navigation and configurable hotkeys.
-- Tray playback preview with transport controls, fullscreen expansion and pinning.
-- Configurable playback-progress persistence and end-of-file behavior.
-
-### Video
-
-- D3D11 compatibility renderer selected by default on a fresh configuration.
+- D3D11 renderer selected by default on a fresh configuration.
 - Optional D3D12 renderer.
-- Selectable 8-bit UNORM, 10-bit RGB and 16-bit-float scRGB output precision.
-- Configurable source-FPS presentation behavior.
+- Real selectable output allocation modes:
+  - 8-bit UNORM
+  - 10-bit RGB
+  - 16-bit-float scRGB
+- Source-rate and unlocked presentation controls.
 
-### Subtitles
+### Media
 
-- Embedded and sidecar subtitle workflows.
-- Configurable font, size, style, foreground/background color and alpha.
-- Live subtitle-style preview.
+- FFmpeg 9.0.1 media stack.
+- dav1d AV1 decoding path.
+- VVdeC VVC / H.266 decoding path.
+- libopenmpt tracker/module playback.
+- Embedded artwork handling.
+- Embedded and sidecar subtitle infrastructure.
+
+### Audio
+
+- Windows WASAPI output path.
+- Bundled audio decode/conversion stack.
+
+### Interface
+
+- Custom player window and context menu.
+- Tray playback preview and transport controls.
+- Tray pinning and fullscreen expansion.
+- Playlist and history workflows.
+- Regex search support.
+- Configurable interface visibility.
+- Configurable subtitle presentation.
+- Hotkey reference/configuration page.
+- Diagnostics OSD.
 
 ### Updates
 
-- Optional GitHub release checking under **Options → Player → Check new versions**.
-- Deferred startup check and low-frequency periodic checks during long-running sessions.
-- Update notification links to the GitHub release page; MJMP does not auto-install releases.
+- GitHub release checks can be enabled/disabled under **Options → Player → Check new versions**.
+- First automatic check occurs approximately 10 seconds after startup.
+- Long-running sessions recheck approximately every 6 hours.
+- Checks are asynchronous.
+- The same available release is notified only once per process session.
+- Updates are not automatically downloaded or executed.

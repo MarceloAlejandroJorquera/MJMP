@@ -1,67 +1,129 @@
 # MJMP Release Checklist
 
+This checklist applies to the public binary-release workflow.
+
 ## 1. Build the release binary
 
-From the private MJMP source tree, run `run.bat`.
+From the private MJMP source tree, run:
 
-A successful build must produce both:
+```text
+run.bat
+```
+
+A successful release build must produce:
 
 ```text
 dist\MJMPv1.exe
 dist\SHA256SUMS.txt
 ```
 
-`run.bat` generates `SHA256SUMS.txt` automatically from the exact executable copied into `dist`.
+The build generates `SHA256SUMS.txt` from the exact executable copied into `dist`.
 
 ## 2. Verify the checksum locally
 
+From the private project root:
+
 ```powershell
-$exe = "C:\dev\repos\private\MJMP\MJMPv1\dist\MJMPv1.exe"
-$sum = "C:\dev\repos\private\MJMP\MJMPv1\dist\SHA256SUMS.txt"
+$exe = ".\dist\MJMPv1.exe"
+$sum = ".\dist\SHA256SUMS.txt"
 
 $actual = (Get-FileHash $exe -Algorithm SHA256).Hash.ToLowerInvariant()
 $expected = ((Get-Content $sum -Raw).Trim() -split '\s+')[0].ToLowerInvariant()
+
 $actual
 $expected
 $actual -eq $expected
 ```
 
-The final line must be `True`.
+The final line must be:
+
+```text
+True
+```
 
 ## 3. Verify portability
 
-Run `dumpbin /dependents` against `MJMPv1.exe` and confirm there are no third-party codec/runtime DLL imports such as FFmpeg, OpenMPT, dav1d, VVdeC, `VCRUNTIME*.dll`, or `MSVCP*.dll`.
+From a Visual Studio developer shell:
 
-## 4. Update public documentation
+```powershell
+dumpbin /dependents .\dist\MJMPv1.exe
+```
 
-- Update `CHANGELOG.md`.
-- Update release notes for the target public version.
-- Refresh screenshots if the visible UI changed.
-- Confirm README links and version references.
+Confirm that the release does not import third-party codec/runtime DLLs such as:
 
-## 5. Create the GitHub release
+```text
+avcodec
+avformat
+avutil
+swscale
+swresample
+openmpt
+dav1d
+vvdec
+vcruntime
+msvcp
+```
 
-For version `1`:
+The release is expected to import normal Windows system DLLs.
 
-- Tag: `v1`
-- Target: `main`
-- Release title: `MJMP v1`
-- Pre-release: **off**
-- Set as latest release: **on**
+## 4. Refresh public documentation
 
-Attach exactly:
+Review:
+
+- `README.md`
+- `CHANGELOG.md`
+- the release-specific notes
+- `SECURITY.md`
+- screenshots when visible UI changes
+- public version references
+- download/release links
+
+## 5. Commit documentation changes
+
+Review the working tree:
+
+```powershell
+git status
+git diff
+```
+
+Then stage, commit and push:
+
+```powershell
+git add .
+git status
+git commit -m "Refresh public release documentation"
+git push origin main
+```
+
+Do not commit `MJMPv1.exe` or `SHA256SUMS.txt` to the normal repository tree.
+
+## 6. Create or update the GitHub release
+
+For public version `1`:
+
+```text
+Tag: v1
+Target: main
+Title: MJMP v1
+Pre-release: off
+Latest release: on
+```
+
+Attach:
 
 ```text
 MJMPv1.exe
 SHA256SUMS.txt
 ```
 
-Do not commit either release asset to the repository tree.
+## 7. Post-publication verification
 
-## 6. Post-publication verification
+After publication:
 
-- Download both assets from GitHub as a user would.
-- Verify the downloaded executable against the published checksum.
-- Launch the downloaded binary.
-- Confirm the release is visible as the repository's latest stable release.
-- Confirm MJMP's update checker resolves this repository correctly.
+1. Download both release assets from GitHub.
+2. Verify the downloaded binary against `SHA256SUMS.txt`.
+3. Launch the downloaded executable.
+4. Confirm the release is marked as the latest stable release.
+5. Confirm README/release links work.
+6. Confirm MJMP's update checker resolves `MarceloAlejandroJorquera/MJMP`.
