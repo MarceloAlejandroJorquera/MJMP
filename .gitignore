@@ -18,3 +18,5 @@ SHA256SUMS.txt
 .idea/
 Thumbs.db
 .DS_Store
+
+tools/
