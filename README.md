@@ -5,34 +5,34 @@
 </p>
 
 <p align="center">
-  <img alt="Release v1" src="https://img.shields.io/badge/release-v1-2ea043">
-  <img alt="Status stable" src="https://img.shields.io/badge/status-stable-2ea043">
-  <img alt="Platform Windows x64" src="https://img.shields.io/badge/platform-Windows%20x64-0078D4">
-  <img alt="Language C++23" src="https://img.shields.io/badge/language-C%2B%2B23-00599C">
-  <img alt="Compiler MSVC 19.51" src="https://img.shields.io/badge/compiler-MSVC%2019.51-5C2D91">
+<a href="https://github.com/MarceloAlejandroJorquera/MJMP/releases/tag/v1"><img alt="Release v1" src="https://img.shields.io/badge/release-v1-2ea043"></a>&nbsp;
+<a href="https://github.com/MarceloAlejandroJorquera/MJMP/releases/latest"><img alt="Status stable" src="https://img.shields.io/badge/status-stable-2ea043"></a>&nbsp;
+<a href="#system-requirements"><img alt="Platform Windows x64" src="https://img.shields.io/badge/platform-Windows%20x64-0078D4"></a>&nbsp;
+<a href="docs/ARCHITECTURE.md"><img alt="Language C++23" src="https://img.shields.io/badge/language-C%2B%2B23-00599C"></a>&nbsp;
+<a href="docs/ARCHITECTURE.md"><img alt="Compiler MSVC 19.51" src="https://img.shields.io/badge/compiler-MSVC%2019.51-5C2D91"></a>
 </p>
 
 <p align="center">
-  <img alt="Renderer D3D11 default" src="https://img.shields.io/badge/renderer-D3D11%20default-4B8BBE">
-  <img alt="Renderer D3D12 available" src="https://img.shields.io/badge/renderer-D3D12%20available-6f42c1">
-  <img alt="FFmpeg 9.0.1" src="https://img.shields.io/badge/media-FFmpeg%209.0.1-7E2D2D">
-  <img alt="AV1 dav1d" src="https://img.shields.io/badge/AV1-dav1d-00897B">
-  <img alt="VVC H.266 VVdeC" src="https://img.shields.io/badge/VVC%20%2F%20H.266-VVdeC-8E44AD">
-  <img alt="Tracker modules libopenmpt" src="https://img.shields.io/badge/modules-libopenmpt-3A6EA5">
-  <img alt="Audio WASAPI" src="https://img.shields.io/badge/audio-WASAPI-0067B8">
+<a href="#d3d11"><img alt="Renderer D3D11 default" src="https://img.shields.io/badge/renderer-D3D11%20default-4B8BBE"></a>&nbsp;
+<a href="#d3d12"><img alt="Renderer D3D12 available" src="https://img.shields.io/badge/renderer-D3D12%20available-6f42c1"></a>&nbsp;
+<a href="https://ffmpeg.org/"><img alt="FFmpeg 9.0.1" src="https://img.shields.io/badge/media-FFmpeg%209.0.1-7E2D2D"></a>&nbsp;
+<a href="https://code.videolan.org/videolan/dav1d"><img alt="AV1 dav1d" src="https://img.shields.io/badge/AV1-dav1d-00897B"></a>&nbsp;
+<a href="https://github.com/fraunhoferhhi/vvdec"><img alt="VVC H.266 VVdeC" src="https://img.shields.io/badge/VVC%20%2F%20H.266-VVdeC-8E44AD"></a>&nbsp;
+<a href="https://lib.openmpt.org/libopenmpt/"><img alt="Tracker modules libopenmpt" src="https://img.shields.io/badge/modules-libopenmpt-3A6EA5"></a>&nbsp;
+<a href="https://learn.microsoft.com/windows/win32/coreaudio/wasapi"><img alt="Audio WASAPI" src="https://img.shields.io/badge/audio-WASAPI-0067B8"></a>
 </p>
 
 <p align="center">
-  <img alt="Build CMake 4.4.2" src="https://img.shields.io/badge/build-CMake%204.4.2-064F8C">
-  <img alt="Build Ninja 1.13.2" src="https://img.shields.io/badge/build-Ninja%201.13.2-4EAA25">
-  <img alt="Dependencies vcpkg static" src="https://img.shields.io/badge/deps-vcpkg%20static-5C2D91">
-  <img alt="Runtime static MSVC" src="https://img.shields.io/badge/runtime-static%20MSVC-5C2D91">
+<a href="https://cmake.org/"><img alt="Build CMake 4.4.2" src="https://img.shields.io/badge/build-CMake%204.4.2-064F8C"></a>&nbsp;
+<a href="https://ninja-build.org/"><img alt="Build Ninja 1.13.2" src="https://img.shields.io/badge/build-Ninja%201.13.2-4EAA25"></a>&nbsp;
+<a href="https://github.com/microsoft/vcpkg"><img alt="Dependencies vcpkg static" src="https://img.shields.io/badge/deps-vcpkg%20static-5C2D91"></a>&nbsp;
+<a href="docs/ARCHITECTURE.md"><img alt="Runtime static MSVC" src="https://img.shields.io/badge/runtime-static%20MSVC-5C2D91"></a>
 </p>
 
 <p align="center">
-  <img alt="Portable single EXE" src="https://img.shields.io/badge/distribution-portable%20single%20EXE-444444">
-  <img alt="SHA-256 release integrity" src="https://img.shields.io/badge/integrity-SHA--256-CB6D17">
-  <img alt="GitHub Releases update checks" src="https://img.shields.io/badge/update%20checks-GitHub%20Releases-24292F">
+<a href="https://github.com/MarceloAlejandroJorquera/MJMP/releases/latest"><img alt="Portable single EXE" src="https://img.shields.io/badge/distribution-portable%20single%20EXE-444444"></a>&nbsp;
+<a href="#release-integrity"><img alt="SHA-256 release integrity" src="https://img.shields.io/badge/integrity-SHA--256-CB6D17"></a>&nbsp;
+<a href="#update-checks"><img alt="GitHub Releases update checks" src="https://img.shields.io/badge/update%20checks-GitHub%20Releases-24292F"></a>
 </p>
 
 <p align="center">
