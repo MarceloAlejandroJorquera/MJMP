@@ -1,0 +1,10 @@
+MJMP Binary Distribution Notice
+
+Copyright (c) 2026. All rights reserved.
+
+This repository distributes compiled MJMP binary releases and accompanying documentation.
+No source-code license is granted by this repository. Except for rights required by applicable law,
+no permission is granted to copy, modify, sublicense, or redistribute the program outside the terms
+expressly provided by the copyright holder.
+
+Third-party components incorporated into MJMP remain subject to their respective licenses.
