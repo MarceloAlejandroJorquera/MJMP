@@ -1,28 +1,38 @@
-# MJMP v1
+<h1 align="center">MJMP v1</h1>
 
-Initial public release of MJMP for 64-bit Windows.
+<p align="center"><strong>First public release of MJMP for 64-bit Windows.</strong></p>
 
 ## Highlights
 
-- Portable single-file distribution: `MJMPv1.exe`
-- No installer required
-- No external codec pack required
-- No Visual C++ Redistributable installation required
-- D3D11 compatibility renderer with optional D3D12 renderer
-- Tray playback preview and transport controls
-- Configurable playback, subtitles, renderer/output precision, visibility, and hotkeys
-- Built-in GitHub release checking, configurable under **Options → Player → Check new versions**
+- **Portable:** one `MJMPv1.exe`, no installer required.
+- **Self-contained playback stack:** no external codec pack required.
+- **Compatibility first:** D3D11 is selected by default on a fresh configuration, with D3D12 available optionally.
+- **Output precision choices:** 8-bit UNORM, 10-bit RGB and 16-bit-float scRGB.
+- **Tray workflow:** live preview, transport controls, fullscreen expansion and pinning.
+- **Subtitles:** configurable styling with a live preview.
+- **Player workflow:** playlist/history, hotkeys, visibility controls and playback preferences.
+- **Update awareness:** optional GitHub release checking under **Options → Player → Check new versions**.
 
-## Installation
+## Release assets
 
-Download `MJMPv1.exe` from the GitHub Release assets and run it.
+Download both files from the release:
 
-## Integrity
+- `MJMPv1.exe`
+- `SHA256SUMS.txt`
 
-When `SHA256SUMS.txt` is attached to the release, verify the executable with PowerShell:
+## Integrity verification
 
 ```powershell
 Get-FileHash .\MJMPv1.exe -Algorithm SHA256
+Get-Content .\SHA256SUMS.txt
 ```
 
-Compare the resulting hash with the value published in `SHA256SUMS.txt`.
+The hashes must match.
+
+## Installation
+
+There is no installer. Place `MJMPv1.exe` wherever you want and run it directly.
+
+## Full changelog
+
+See [CHANGELOG.md](CHANGELOG.md).
