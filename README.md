@@ -1,34 +1,74 @@
 # MJMP
 
-MJMP is a portable x64 Windows multimedia player distributed as a **single executable**.
+**Portable x64 Windows multimedia player with broad codec support and GPU-accelerated playback.**
+
+MJMP is distributed as a **single executable**. No codec pack, FFmpeg installation, Visual C++ Redistributable, OpenMPT installation, dav1d installation, or VVdeC installation is required.
 
 ## Download
 
-Use the **Releases** section of this repository and download `MJMPv1.exe` from the latest release.
+Download **`MJMPv1.exe`** from the [latest GitHub release](https://github.com/MarceloAlejandroJorquera/MJMP/releases/latest).
 
-No codec pack, FFmpeg installation, Visual C++ Redistributable, OpenMPT installation, dav1d installation, or VVdeC installation is required. The media stack used by MJMP is linked into the executable; Windows graphics, audio, networking, and shell components are supplied by the operating system.
+## Screenshots
+
+### Player
+
+![MJMP main player with context menu](docs/screenshots/01-player/01-main-player-context-menu.png)
+
+![MJMP tray playback preview](docs/screenshots/01-player/02-tray-preview.png)
+
+### Options
+
+#### Player
+
+![MJMP Player options](docs/screenshots/02-options/01-player.png)
+
+#### Playback
+
+![MJMP Playback options](docs/screenshots/02-options/02-playback.png)
+
+#### Video
+
+![MJMP Video options](docs/screenshots/02-options/03-video.png)
+
+#### Subtitles
+
+![MJMP Subtitle options](docs/screenshots/02-options/04-subtitles.png)
+
+#### Hotkeys
+
+![MJMP Hotkey options](docs/screenshots/02-options/05-hotkeys.png)
+
+## Features
+
+- Portable **single-file x64 Windows executable**
+- Static media codec/demux stack
+- D3D11 compatibility renderer selected by default on a fresh configuration
+- Optional D3D12 renderer
+- Selectable 8-bit, 10-bit, and 16-bit-float output precision
+- Configurable source-FPS presentation behavior
+- Subtitle styling and preview controls
+- Tray playback preview and transport controls
+- Playlist/history, hotkeys, and visibility controls
+- Built-in GitHub update notification support
 
 ## Requirements
 
 - 64-bit Windows 10 or Windows 11
 - A working Windows audio stack
 - A D3D11-capable GPU/driver for the compatibility renderer
-- D3D12-capable hardware/driver only when selecting the D3D12 renderer
-
-MJMP starts with the **D3D11 renderer** on a fresh configuration for broad compatibility.
+- D3D12-capable hardware/driver when selecting the D3D12 renderer
 
 ## Updates
 
-MJMP can check this repository for new releases. The default policy is deliberately low-frequency:
+MJMP checks this repository for a newer stable release when **Check new versions** is enabled under **Options → Player**.
 
-- first check: **10 seconds after startup**, so networking does not compete with cold media/presenter initialization;
-- while MJMP stays open: **every 6 hours**;
-- requests are asynchronous and never block playback/UI;
+The policy is intentionally low-frequency:
+
+- first check approximately **10 seconds after startup**;
+- while MJMP remains open, recheck approximately **every 6 hours**;
+- requests are asynchronous and do not block playback or the UI;
 - the same available release is notified only once per application session;
-- MJMP does **not** automatically download or execute an update;
-- the check can be disabled under **Options → Player → Check new versions**.
-
-The program reads GitHub's latest non-draft, non-prerelease release and compares its tag with the installed public version. Release tags must use the numeric versioning scheme below.
+- MJMP does **not** automatically download or execute updates.
 
 ## Versioning
 
@@ -40,11 +80,11 @@ Public versions use progressively extended numeric components:
 - `1.1.1.1`
 - `1.1.1.2`
 
-Git tags/releases should use the corresponding `v` prefix, for example `v1`, `v1.1`, or `v1.1.1.1`.
+GitHub release tags use the corresponding `v` prefix, for example `v1`, `v1.1`, or `v1.1.1.1`.
 
 ## Integrity
 
-Each release should publish:
+Release assets may include:
 
 - `MJMPv1.exe`
 - `SHA256SUMS.txt`
@@ -55,8 +95,8 @@ Verify the executable with PowerShell:
 Get-FileHash .\MJMPv1.exe -Algorithm SHA256
 ```
 
-Compare the result with the hash in `SHA256SUMS.txt` attached to the same GitHub release.
+Compare the result with the value published in `SHA256SUMS.txt` for the same release.
 
 ## Repository scope
 
-This repository is intended for **binary releases and release documentation only**. Source code and build dependency trees are not part of the public repository.
+This repository contains **binary release documentation and screenshots**. The executable itself is distributed through GitHub Releases rather than committed to the repository tree. Source code and private build/dependency trees are not included.

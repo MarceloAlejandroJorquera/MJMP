@@ -1,4 +1,4 @@
-# Release binaries are GitHub Release assets, not repository-tree files.
+# Release binaries belong in GitHub Releases, not in the repository tree.
 *.exe
 *.pdb
 *.ilk
@@ -7,16 +7,17 @@
 *.dll
 *.log
 
-# Local release staging.
+# Local release/build staging.
 release/
 dist/
 SHA256SUMS.txt
 
-# Editor/OS noise.
+# Maintainer-local tooling is intentionally not part of the public repository.
+tools/
+
+# Editor / OS noise.
 .vs/
 .vscode/
 .idea/
 Thumbs.db
 .DS_Store
-
-tools/
