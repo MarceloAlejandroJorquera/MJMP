@@ -1,0 +1,27 @@
+﻿{
+    "schema":  "mjmp-release-provenance-v1",
+    "version":  "v1.1",
+    "runtimeMilestone":  "M6.21.317",
+    "generatedAtUtc":  "2026-09-22T03:50:01.7413155Z",
+    "executable":  {
+                       "file":  "MJMPv1.1.exe",
+                       "sha256":  "68520f2fdca441125bdeaf3fac13e17d8bfa4bce11f56e6beee8a75287f2184c"
+                   },
+    "privateSourceSnapshot":  {
+                                  "fileCount":  49,
+                                  "sha256":  "0342d4b3560f24d9488264bb020b181db1b2e34d3e5f5a9a76a12a30f5e5085d",
+                                  "scope":  "CMakeLists.txt + src + retained build/color-qualification tooling"
+                              },
+    "colorQualification":  {
+                               "milestone":  "M6.21.315",
+                               "report":  "m315-color-qualification-20260922-004632748.json",
+                               "reportSha256":  "6e967791a01d79a4b2c2bed5cb4f5abc7aa1ccf6e0f4487180bd1ecd62be6c7f",
+                               "overall":  "PASS",
+                               "rendererMode":  "Both"
+                           },
+    "ffprobe":  {
+                    "path":  "C:\\dev\\repos\\private\\MJMP\\v1.1\\out\\tools\\ffmpeg-probe\\ffmpeg-9.0.2-essentials_build\\bin\\ffprobe.exe",
+                    "version":  "ffprobe version 9.0.2-essentials_build-www.gyan.dev Copyright (c) 2007-2026 the FFmpeg developers"
+                },
+    "publicationPolicy":  "M317 exact binary + M315 Both PASS; post-release fixes move to successor versions."
+}
