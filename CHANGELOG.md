@@ -1,13 +1,137 @@
 # MJMP Changelog
 
+## v1.1.1 — final release
+
+MJMP v1.1.1 is the cumulative successor to public v1.1. It includes the finalized compatibility, renderer-throughput, seeking/UI-ownership, responsiveness, dependency-provenance and release-engineering changes completed after v1.1.
+
+Final executable:
+
+```text
+MJMPv1.1.1.exe
+Build milestone: M6.21.322
+FileVersion: 1.1.1.322
+ProductVersion: 1.1.1
+SHA-256: 86ded6a8edc426f1e778f993d98a6187c9f4b16a5eb6936b5a709c618c1487db
+Size: 27,631,616 bytes
+```
+
+### WebM / VP9 compatibility and recovery
+
+- Hardened **VP9-in-WebM hardware admission** under both D3D11VA and D3D12VA so a nominal hardware context is not accepted when the first usable decode surface never materializes.
+- Added/retained direct **libvpx 1.17.0 VP9-HBD** software decoding as the primary VP9 software path, with FFmpeg retained as the controlled initialization fallback.
+- Fixed asynchronous VP9 hardware-bootstrap failure handling: MJMP now switches to libvpx and performs a backward demux/decoder re-entry from a preceding random-access point instead of replaying only the packet that surfaced the hardware error.
+- Rebuilds VP9 reference state before discarding forward to the original media position, avoiding broken software fallback on inter-frame/reference-dependent WebM streams.
+- Corrected the D3D11 software-compatibility owner so either `CpuYuv` **or** `CpuBgra` production frames establish the active software topology. This is required by ordinary libvpx VP9, which reaches D3D11 through the CPU-BGRA compatibility path.
+- Re-armed the retained UI clock, RenderLoop handoff, hover/hotkey servicing, fullscreen handoff and renderer-generation state after D3D12 → D3D11 switches on VP9/WebM playback.
+- Kept WebM audio discovery container-wide instead of constraining audio selection to the selected video stream relationship, preserving ordinary sibling Opus/Vorbis tracks.
+- Preserved direct **libopus 1.6.1** handling for supported Opus tracks while leaving Vorbis on the FFmpeg-controlled path.
+- Normalized invariant decoded-audio metadata from the codec context when WebM/Matroska Opus frames omit redundant per-frame sample-rate/layout fields.
+
+### D3D11 software compatibility and renderer switching
+
+- Made D3D11 software-video UI ownership topology-driven rather than codec/AVI-specific.
+- Added an autonomous compatibility presentation/UI heartbeat so software video and retained controls do not depend on fresh mouse movement or a coincidental USER32 message.
+- Fixed retained player-clock handoff so D3D11 software playback updates the ribbon/time/progress path continuously.
+- Prevented renderer-swap cover surfaces from becoming hit-test owners while a replacement renderer warms up.
+- Reset software-compatibility ownership at renderer-generation boundaries so stale D3D11 software state cannot leak across `Shutdown()`/`Initialize()` transitions.
+- Retired the visual renderer-swap cover after the first accepted CPU production frame instead of allowing a failed quiescent fence to leave hover/hotkeys effectively frozen.
+- Hardened D3D11 → D3D12 → D3D11 switching for software VP9/AV1/VVC compatibility paths.
+
+### D3D12 Unbounded throughput and presentation
+
+- Made **D3D12 Unbounded genuinely unbound at the producer/presentation-policy level**: active monitor refresh is observed at runtime but is not used as an FPS cap.
+- Removed the old tendency to collapse Unbounded behavior back toward source/display lock when source cadence approached or exceeded monitor refresh.
+- Kept the producer/interpolation path nonblocking and free-running while the physical DXGI/DWM scanout edge publishes only the freshest completed frame for each visible refresh.
+- Separated application-UI cadence from D3D12 video cadence so display-cadenced D11 Chrome cannot throttle the D3D12 Unbounded producer.
+- Removed the cross-API D3D11 VideoProcessor/FRC dependency from native-D3D12 Unbounded generation where the D3D12 path can remain native.
+- Moved D3D12 backend synchronization inside the backend rather than serializing native D3D12 Reserve/Execute/Present behind the presenter's public UI mutex.
+- Expanded the in-flight interpolation slot ring to align with the three-buffer flip chain and improve exact cached-command reuse.
+- Batched cached interpolation fence signaling and reused safely retired command state instead of forcing a CPU/driver signal for every generated frame.
+- Added **Present-only repeats** when a swap-chain back buffer already contains the exact display-observable interpolation phase, decoupling very high Unbounded Present throughput from the much lower physically useful blend-synthesis cadence.
+- Kept the latency-1 scanout/backpressure edge as the visible-composition authority without turning that edge into an Unbounded producer cap.
+
+### Application UI ownership — D11 for both renderer selections
+
+- Consolidated the application UI under the **native D3D11 compositor** for both D3D11 and D3D12 production-video selections.
+- Restricted D3D12 to production-video responsibilities; removed the parallel D3D12 application-UI/seek ownership model.
+- Removed live D3D11On12/D3D12 retained-UI queue ownership from the final interaction architecture.
+- Kept title bar, ribbon, playback/seek Chrome, transport controls, volume controls, interaction feedback and held scrub preview on the D11 path.
+- Removed D11 UI dependence on D3D12 backend frame-residency locking during interaction.
+- Added a lock-free presenter-owned retained-visible-surface latch for D3D12 scan-out applicability so D11 Chrome no longer needs the D3D12 backend mutex.
+- Preserved D3D12 production-video queue priority/fallback behavior while keeping UI work separately owned by D11.
+
+### Seeking, rapid re-grab and held scrub preview
+
+- Unified rapid release → immediate re-grab behavior so the newest physical seek gesture becomes authoritative on both renderer selections.
+- Moved renderer selection out of seek-gesture ownership: D11 and D12 now use the same canonical seek geometry, captured-drag lifetime and retained progress owner.
+- Hardened Raw Input press/release generation tracking so a stale/ambiguous legacy button-up cannot clear a newer accepted seek.
+- Added bounded recovery for exceptionally fast re-grab/move sequences when USER32 message ordering would otherwise demote an active seek to passive hover.
+- Fixed seek-observer DC/DIB recreation so retained D11 seek feedback survives resource recreation.
+- Allowed active physical seeking to publish compact Chrome without waiting on the paused production-video permit.
+- Changed held-preview arbitration to **newest completed frame** semantics so useful completed previews are not discarded merely because a newer request exists.
+- Routed BGRA and YUV held scrub preview through the same native-D3D11 preview compositor for both production-video renderers.
+- Kept release handoff generation-fenced so stale seek/preview work cannot overwrite the newest selected position.
+
+### Smooth playback progress and timeline UI
+
+- Removed the historical Unbounded **200 ms (~5 Hz)** retained hardware playback-clock cadence that made the progress bar advance in visible chunks.
+- Reused the existing DWM composition timing / monitor-refresh resolver to derive the physical UI refresh period.
+- Scheduled compact playback-progress updates at that measured display cadence in both Locked and Unbounded modes.
+- Used the existing high-resolution waitable timer for the next UI deadline instead of quantizing high-refresh displays through repeated 4 ms polling.
+- Kept clock ticks compact: the seek lane/time cluster is dirtied instead of forcing full-ribbon redraws.
+- Made the seek/timeline timestamp formatting duration-aware so hardware-seek timestamps follow the same media-duration format as the main timeline.
+- Corrected remaining-time styling so **only the semantic `-` marker is red**; countdown digits and dim-leading clock glyphs retain the ordinary time palette.
+
+### Hover, hotkeys, fullscreen, Options and OSD responsiveness
+
+- Removed renderer-dependent hover ownership and kept hover/seek interaction responsive while D3D12 video work is active.
+- Reduced unnecessary pointer-rate retained-state mutation and z-order churn.
+- Kept ribbon/time/hover/hotkey servicing live through D3D11 software-compatibility playback and renderer transitions.
+- Hardened fullscreen transition covers so failed auxiliary-Present or renderer-seal work does not leave production playback hidden behind a stale cover.
+- Preserved playback/diagnostics servicing during native move/resize and held-input loops.
+- Reduced Options open/close interference with Unbounded playback by separating UI topology work from the video producer.
+- Consolidated the Options surface to a single borderless top-level window and removed the extra alpha-fringe/backdrop ownership that caused border/flicker regressions.
+- Added offscreen/prewarmed Options residency so opening the surface is primarily a geometry/publication operation rather than a cold child-HWND construction burst.
+- Made the first diagnostics OSD publication atomic/complete rather than exposing a partially initialized frame.
+- Kept diagnostics publication independent from the production-video hot path and preserved its z-order below higher-priority Options/list UI.
+
+### Playback/ribbon details
+
+- Kept the retained visual transport clock monotonic between authoritative media samples so the seek fill and tray progress do not inherit coarse decoder/audio timestamp stepping.
+- Preserved correct Play/Pause state through seek handoff and renderer transitions.
+- Kept the bottom ribbon time live during held interaction and software-compatibility playback.
+- Retained exact source-rate Locked behavior while preventing Unbounded diagnostics from treating monitor refresh as the target/baseline.
+
+### FFmpeg A2/A3 relocation and provenance
+
+- Corrected stale A2 provenance metadata that still pointed at the v1.1 tree after the v1.1.1 relocation.
+- Rebased only path-valued metadata to the v1.1.1 A2 shadow SDK; the sealed A2 SDK bytes and hashes were not rebuilt or silently changed.
+- Kept A3 fail-closed and explicitly selected the v1.1.1 `ffmpeg-rebase-9.0.1\sdk\a2-shadow` production SDK.
+- Production linking uses all five validated A2 shadow FFmpeg archives; the golden Tier-1 FFmpeg archives are excluded from the application link.
+- Retained the golden Tier-1 FFmpeg tree as read-only rollback/reference only, with no silent fallback.
+- Preserved A3 link-map/provenance reporting for the production FFmpeg graph.
+
+### Release/version engineering
+
+- Advanced the public identity to **v1.1.1** and normalized Windows VERSIONINFO to:
+  - `FileVersion 1.1.1.322`
+  - `ProductVersion 1.1.1`
+  - `OriginalFilename MJMPv1.1.1.exe`
+- Added/updated v1.1.1 release-tree verification around the final D11-UI/D12-video architecture rather than restoring superseded historical UI contracts.
+- Kept x64 / PE32+ / Windows GUI validation in the final packager.
+- Kept portable dependency verification fail-closed against dynamic FFmpeg/codec/MSVC runtime DLL dependencies.
+- Added deterministic release staging for `MJMPv1.1.1.exe`, `SHA256SUMS.txt`, the Windows-x64 ZIP, machine-readable release manifest and release-asset SHA-256 manifest.
+- Final release binary verification passes with SHA-256:
+  `86ded6a8edc426f1e778f993d98a6187c9f4b16a5eb6936b5a709c618c1487db`.
+
 ## v1.1 — final release
 
 MJMP v1.1 consolidates the successfully completed work since the public **v1 / M6.21.205** baseline. It is a major playback, renderer, seeking, codec, UI and release-engineering update rather than a small point revision.
 
-The final v1.1 release binary is the **M6.21.317** `MJMPv1.1.exe`. Its SHA-256 is sealed during the final publication pass after M315 is rerun against that exact executable:
+The final v1.1 release binary is the M315d-qualified `MJMPv1.1.exe`:
 
 ```text
-SHA-256: 68520f2fdca441125bdeaf3fac13e17d8bfa4bce11f56e6beee8a75287f2184c
+SHA-256: 3a4518339a009f8ee7cb750306c36c4a830fde164649523351d7c631f7cac9b3
 ```
 
 ### Playback, decode and renderer architecture
@@ -105,7 +229,7 @@ SHA-256: 68520f2fdca441125bdeaf3fac13e17d8bfa4bce11f56e6beee8a75287f2184c
 - Added `-RequireColorQualified` release verification that binds a PASS report to the exact current executable SHA-256.
 - Completed the final D3D11 + D3D12 color qualification with **all 8 cases PASS**.
 - Sealed the successful qualification to the final v1.1 binary SHA-256:
-  `68520f2fdca441125bdeaf3fac13e17d8bfa4bce11f56e6beee8a75287f2184c`.
+  `3a4518339a009f8ee7cb750306c36c4a830fde164649523351d7c631f7cac9b3`.
 
 ### Audio-only playback and audio behavior
 
@@ -191,7 +315,6 @@ SHA-256: 68520f2fdca441125bdeaf3fac13e17d8bfa4bce11f56e6beee8a75287f2184c
 - Added/retained compact time / remaining-time / volume presentation.
 - Added floating seek-time feedback above the playback lane.
 - Refined the seek lane with stronger hover/active feedback, red pointer marker and improved elapsed/progress visibility.
-- **M6.21.317:** unified the normal retained playback head and the hover-owned seek lane under the same 32-column feather contract, eliminating the visible faded-edge snap/glitch when the pointer enters or leaves the playback bar across video/audio and D3D11/D3D12.
 - Kept held-seek timestamp, playback bar and ribbon time synchronized during active interaction.
 - Improved empty-player presentation and open/drop guidance.
 - Improved notification layering so player messages do not unnecessarily interfere with playback or diagnostics.
@@ -239,7 +362,7 @@ SHA-256: 68520f2fdca441125bdeaf3fac13e17d8bfa4bce11f56e6beee8a75287f2184c
 - Removed unreferenced build/probe artifacts and unused source artwork that was no longer consumed by the executable.
 - Reduced the private release tree from the earlier development-heavy state while keeping the validated persistent SDK and current release tooling.
 - Updated the public-version convention and GitHub release plumbing for `v1.1` and future progressively extended versions (`v1.1.1`, etc.).
-- Prepared the final v1.1 binary-release workflow around the exact M6.21.317 executable after the final seek-feather fix and renewed M315 certification; later fixes are intended for successor versions rather than silently replacing the published v1.1 binary.
+- Prepared the final v1.1 binary-release workflow around the exact M315d-qualified executable; later fixes are intended for successor versions rather than silently replacing the published v1.1 binary.
 
 ### Qualification / release status
 
@@ -247,11 +370,11 @@ SHA-256: 68520f2fdca441125bdeaf3fac13e17d8bfa4bce11f56e6beee8a75287f2184c
 - **A2:** completed — semantic replay, MSVC portability cleanup, warning-free rebuild and linker-symbol parity validation.
 - **A3:** completed — production application linked against the validated A2 shadow SDK.
 - **A4:** framework retained for engineering/runtime coverage; not used as a blocker for the simplified final v1.1 publication policy.
-- **M315/M315d color qualification:** completed; rerun and sealed to the final M6.21.317 executable during publication.
+- **M315/M315d color qualification:** completed and sealed to the final binary.
 - Final color corpus result: **8/8 cases PASS under D3D11 and D3D12**.
 - Final release-tree verifier result: **PASS**.
 - Frozen v1.1 executable SHA-256:
-  `68520f2fdca441125bdeaf3fac13e17d8bfa4bce11f56e6beee8a75287f2184c`.
+  `3a4518339a009f8ee7cb750306c36c4a830fde164649523351d7c631f7cac9b3`.
 
 ## v1
 

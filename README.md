@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-<a href="https://github.com/MarceloAlejandroJorquera/MJMP/releases/tag/v1"><img alt="Release v1" src="https://img.shields.io/badge/release-v1-2ea043"></a>&nbsp;
+<a href="https://github.com/MarceloAlejandroJorquera/MJMP/releases/tag/v1.1.1"><img alt="Release v1.1.1" src="https://img.shields.io/badge/release-v1.1.1-2ea043"></a>&nbsp;
 <a href="https://github.com/MarceloAlejandroJorquera/MJMP/releases/latest"><img alt="Status stable" src="https://img.shields.io/badge/status-stable-2ea043"></a>&nbsp;
 <a href="#system-requirements"><img alt="Platform Windows x64" src="https://img.shields.io/badge/platform-Windows%20x64-0078D4"></a>&nbsp;
 <a href="docs/ARCHITECTURE.md"><img alt="Language C++23" src="https://img.shields.io/badge/language-C%2B%2B23-00599C"></a>&nbsp;
@@ -40,7 +40,7 @@
   &nbsp;·&nbsp;
   <a href="CHANGELOG.md">Changelog</a>
   &nbsp;·&nbsp;
-  <a href="RELEASE_NOTES_v1.md">v1 release notes</a>
+  <a href="RELEASE_NOTES_v1.1.1.md">v1.1.1 release notes</a>
   &nbsp;·&nbsp;
   <a href="SECURITY.md">Security</a>
 </p>
@@ -59,11 +59,11 @@
 
 <h2 align="center">Overview</h2>
 
-**MJMP** is a portable Windows multimedia player distributed as a **single executable**: `MJMPv1.exe`.
+**MJMP** is a portable Windows multimedia player distributed as a **single executable**: `MJMPv1.1.1.exe`.
 
 Its media/runtime stack is linked into the application, so users do not need to separately install FFmpeg, a codec pack, libopenmpt, dav1d, VVdeC, or the Microsoft Visual C++ Redistributable.
 
-On a fresh configuration, MJMP starts **maximized** and selects **D3D11 by default** for broad compatibility. **D3D12** remains available as an optional renderer for capable systems.
+On a fresh configuration, MJMP starts **maximized** and selects **D3D11 by default**. **D3D11 owns the application UI and interaction compositor under both renderer selections**, while **D3D12 remains available as an optional production-video renderer** on capable systems.
 
 <table align="center">
   <thead>
@@ -75,11 +75,11 @@ On a fresh configuration, MJMP starts **maximized** and selects **D3D11 by defau
   <tbody>
     <tr>
       <td><strong>Distribution</strong></td>
-      <td>Portable <code>MJMPv1.exe</code>; no installer; no external codec pack</td>
+      <td>Portable <code>MJMPv1.1.1.exe</code>; no installer; no external codec pack</td>
     </tr>
     <tr>
       <td><strong>Rendering</strong></td>
-      <td>D3D11 compatibility path + optional D3D12 path</td>
+      <td>D3D11 application UI + D3D11/D3D12 production-video paths</td>
     </tr>
     <tr>
       <td><strong>Output precision</strong></td>
@@ -181,9 +181,9 @@ On a fresh configuration, MJMP starts **maximized** and selects **D3D11 by defau
 <h2 align="center">Download and run</h2>
 
 1. Open the [latest release](https://github.com/MarceloAlejandroJorquera/MJMP/releases/latest).
-2. Download **`MJMPv1.exe`** and **`SHA256SUMS.txt`**.
+2. Download **`MJMPv1.1.1.exe`** and **`SHA256SUMS.txt`**.
 3. Optionally verify the executable using the SHA-256 instructions below.
-4. Run `MJMPv1.exe` directly.
+4. Run `MJMPv1.1.1.exe` directly.
 
 No installation step is required.
 
@@ -197,18 +197,18 @@ No installation step is required.
 Every published release is intended to provide these assets:
 
 ```text
-MJMPv1.exe
+MJMPv1.1.1.exe
 SHA256SUMS.txt
 ```
 
 Verify the executable in PowerShell:
 
 ```powershell
-Get-FileHash .\MJMPv1.exe -Algorithm SHA256
+Get-FileHash .\MJMPv1.1.1.exe -Algorithm SHA256
 Get-Content .\SHA256SUMS.txt
 ```
 
-The SHA-256 value returned by `Get-FileHash` must match the `MJMPv1.exe` entry in `SHA256SUMS.txt`.
+The SHA-256 value returned by `Get-FileHash` must match the `MJMPv1.1.1.exe` entry in `SHA256SUMS.txt`.
 
 The private release build generates `SHA256SUMS.txt` from the exact executable copied into `dist`, so the manifest belongs to the same binary being published.
 
@@ -226,9 +226,12 @@ The current release build uses:
 - **Ninja 1.13.2**
 - **vcpkg static dependencies**
 - **FFmpeg 9.0.1**
-- **dav1d** for AV1 decoding
-- **VVdeC** for VVC / H.266 decoding
-- **libopenmpt** for tracker/module playback
+- **dav1d** static sidecar for AV1 decoding
+- **libvpx 1.17.0** for VP9/high-bit-depth software decoding
+- **VVdeC 3.3.0-dev** (`e2a596a6524b`) for VVC / H.266 decoding
+- **libopus 1.6.1** for direct Opus decoding
+- **mpg123 1.33.7** for MP3/MPEG audio decoding
+- **libopenmpt 0.8.9** for tracker/module playback
 - **WASAPI** for Windows audio output
 - **D3D11** and **D3D12** rendering paths
 - **static MSVC runtime**
@@ -253,11 +256,15 @@ This means users do **not** need to separately install:
 
 ### D3D11
 
-D3D11 is the default renderer on a fresh configuration and is intended to provide the broadest compatibility.
+D3D11 is the default production renderer on a fresh configuration and is also the **single application-UI compositor** for MJMP. Title/ribbon controls, playback/seek UI, interaction feedback and held scrub preview remain on the native D3D11 UI path regardless of the selected production-video renderer.
 
 ### D3D12
 
-D3D12 is available as an optional renderer on supported hardware and drivers.
+D3D12 is available as an optional **production-video renderer** on supported hardware and drivers. In v1.1.1 it does not own a separate application-UI, seek-bar or scrub-preview implementation; those remain on the shared D3D11 interaction path.
+
+With **Unlocked FPS** enabled, the D3D12 producer/presentation policy is genuinely unbounded and nonblocking: monitor refresh is observed for scanout/diagnostics but is not used as an FPS cap. The physical display still receives the freshest completed frame at each DXGI/DWM scanout opportunity.
+
+Playback-progress publication uses MJMP's retained QPC position with a DWM/display-cadence UI refresh rather than the older coarse retained-clock stepping.
 
 MJMP exposes real output-allocation modes for:
 
@@ -274,6 +281,8 @@ Actual output behavior depends on source media, Windows composition, display con
 MJMP uses its bundled FFmpeg-based media stack together with specialized decoding paths where applicable.
 
 The current project includes infrastructure for:
+
+- **VP9/WebM hardware-first recovery** with D3D11VA/D3D12VA admission and direct libvpx 1.17.0 software fallback;
 
 - common video/audio containers through FFmpeg;
 - H.264 / AVC and H.265 / HEVC playback paths;
