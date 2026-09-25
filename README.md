@@ -175,6 +175,11 @@ On a fresh configuration, MJMP starts **maximized** and selects **D3D11 by defau
   <img src="docs/screenshots/02-options/05-hotkeys.png" alt="MJMP Hotkey options" width="1100">
 </p>
 <p align="center"><em>Keyboard shortcuts for playback, navigation and interface actions.</em></p>
+<h3 align="center">Bindings</h3>
+<p align="center">
+  <img src="docs/screenshots/02-options/05-bindings.png" alt="MJMP Bindings options" width="1100">
+</p>
+<p align="center"><em>File-association bindings with per-format controls and Bind all support.</em></p>
 
 ---
 
