@@ -1,5 +1,40 @@
 # MJMP Changelog
 
+## v1.1.1.1 — critical hotfix release
+
+MJMP v1.1.1.1 is the critical-fix successor to v1.1.1. It preserves the v1.1.1 media stack and D3D11-UI/D3D12-video ownership model while correcting the remaining retained-clock and non-client resize defects discovered after release.
+
+Release identity:
+
+```text
+Executable:       MJMPv1.1.1.1.exe
+Release archive:  MJMPv1.1.1.1.zip
+Build milestone:  M6.21.322qfju
+FileVersion:      1.1.1.1
+ProductVersion:   1.1.1.1
+SHA-256:          published with the v1.1.1.1 release assets
+```
+
+### Playback clock and time badges
+
+- Removed the arbitrary one-minute lifetime from the retained transport-position projection, eliminating the prolonged-playback timestamp/progress stall.
+- Made post-seek clock convergence follow the authoritative transport seek epoch and landed position rather than renderer-specific presentation evidence.
+- Added hover-independent semantic refresh while a released seek is converging, so the transport state can settle without pointer traffic.
+- Fixed the final current/remaining-time hover dependency by deriving time-badge damage from the same QPC-projected retained playback position used by the visible player UI.
+- Current time, remaining time and progress now continue advancing with no hover over the seek lane, volume control, transport controls, or other ribbon elements.
+
+### Window-border interaction
+
+- Treats a stationary resize-border/corner press and release as a strict zero-delta no-op.
+- Prevents zero-delta border clicks from entering the replacement resize-shell/compositor handoff that could briefly expose the fallback gray/black playback background.
+- Real resize operations keep the existing covered resize/commit path.
+
+### Release engineering
+
+- Advanced the public version, Windows FileVersion/ProductVersion and original filename to `1.1.1.1` / `MJMPv1.1.1.1.exe`.
+- Final release packaging targets `MJMPv1.1.1.1.zip` with generated SHA-256 integrity files.
+- Release verification fails closed if the qfjr retained-clock/border-click fixes, qfjs seek-epoch convergence, qfjt hover-independent semantic refresh, or qfju autonomous time-badge damage contract is absent.
+
 ## v1.1.1 — final release
 
 MJMP v1.1.1 is the cumulative successor to public v1.1. It includes the finalized compatibility, renderer-throughput, seeking/UI-ownership, responsiveness, dependency-provenance and release-engineering changes completed after v1.1.

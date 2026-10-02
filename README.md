@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-<a href="https://github.com/MarceloAlejandroJorquera/MJMP/releases/tag/v1.1.1"><img alt="Release v1.1.1" src="https://img.shields.io/badge/release-v1.1.1-2ea043"></a>&nbsp;
+<a href="https://github.com/MarceloAlejandroJorquera/MJMP/releases/tag/v1.1.1.1"><img alt="Release v1.1.1.1" src="https://img.shields.io/badge/release-v1.1.1.1-2ea043"></a>&nbsp;
 <a href="https://github.com/MarceloAlejandroJorquera/MJMP/releases/latest"><img alt="Status stable" src="https://img.shields.io/badge/status-stable-2ea043"></a>&nbsp;
 <a href="#system-requirements"><img alt="Platform Windows x64" src="https://img.shields.io/badge/platform-Windows%20x64-0078D4"></a>&nbsp;
 <a href="docs/ARCHITECTURE.md"><img alt="Language C++23" src="https://img.shields.io/badge/language-C%2B%2B23-00599C"></a>&nbsp;
@@ -40,7 +40,7 @@
   &nbsp;·&nbsp;
   <a href="CHANGELOG.md">Changelog</a>
   &nbsp;·&nbsp;
-  <a href="RELEASE_NOTES_v1.1.1.md">v1.1.1 release notes</a>
+  <a href="RELEASE_NOTES_v1.1.1.1.md">v1.1.1.1 release notes</a>
   &nbsp;·&nbsp;
   <a href="SECURITY.md">Security</a>
 </p>
@@ -59,11 +59,13 @@
 
 <h2 align="center">Overview</h2>
 
-**MJMP** is a portable Windows multimedia player distributed as a **single executable**: `MJMPv1.1.1.exe`.
+**MJMP** is a portable Windows multimedia player distributed as a **single executable**: `MJMPv1.1.1.1.exe`.
 
 Its media/runtime stack is linked into the application, so users do not need to separately install FFmpeg, a codec pack, libopenmpt, dav1d, VVdeC, or the Microsoft Visual C++ Redistributable.
 
 On a fresh configuration, MJMP starts **maximized** and selects **D3D11 by default**. **D3D11 owns the application UI and interaction compositor under both renderer selections**, while **D3D12 remains available as an optional production-video renderer** on capable systems.
+
+**v1.1.1.1 is a critical playback/UI hotfix release.** It removes the remaining hover dependency from the retained current/remaining-time display, keeps timeline progress live after seeks without pointer activity, and prevents stationary resize-border clicks from briefly exposing the fallback playback background.
 
 <table align="center">
   <thead>
@@ -75,7 +77,7 @@ On a fresh configuration, MJMP starts **maximized** and selects **D3D11 by defau
   <tbody>
     <tr>
       <td><strong>Distribution</strong></td>
-      <td>Portable <code>MJMPv1.1.1.exe</code>; no installer; no external codec pack</td>
+      <td>Portable <code>MJMPv1.1.1.1.exe</code>; no installer; no external codec pack</td>
     </tr>
     <tr>
       <td><strong>Rendering</strong></td>
@@ -186,9 +188,9 @@ On a fresh configuration, MJMP starts **maximized** and selects **D3D11 by defau
 <h2 align="center">Download and run</h2>
 
 1. Open the [latest release](https://github.com/MarceloAlejandroJorquera/MJMP/releases/latest).
-2. Download **`MJMPv1.1.1.exe`** and **`SHA256SUMS.txt`**.
-3. Optionally verify the executable using the SHA-256 instructions below.
-4. Run `MJMPv1.1.1.exe` directly.
+2. Download **`MJMPv1.1.1.1.zip`** and **`SHA256SUMS.txt`**.
+3. Optionally verify the ZIP using the SHA-256 instructions below.
+4. Extract the archive and run **`MJMPv1.1.1.1.exe`** directly.
 
 No installation step is required.
 
@@ -199,23 +201,24 @@ No installation step is required.
 
 <h2 align="center">Release integrity</h2>
 
-Every published release is intended to provide these assets:
+The v1.1.1.1 release publishes the portable archive and its generated integrity data:
 
 ```text
-MJMPv1.1.1.exe
+MJMPv1.1.1.1.zip
+MJMPv1.1.1.1.zip.sha256
 SHA256SUMS.txt
 ```
 
-Verify the executable in PowerShell:
+Verify the downloaded archive in PowerShell:
 
 ```powershell
-Get-FileHash .\MJMPv1.1.1.exe -Algorithm SHA256
+Get-FileHash .\MJMPv1.1.1.1.zip -Algorithm SHA256
 Get-Content .\SHA256SUMS.txt
 ```
 
-The SHA-256 value returned by `Get-FileHash` must match the `MJMPv1.1.1.exe` entry in `SHA256SUMS.txt`.
+The SHA-256 value returned by `Get-FileHash` must match the `MJMPv1.1.1.1.zip` entry in `SHA256SUMS.txt`. The archive contains `MJMPv1.1.1.1.exe`, the release notes and license.
 
-The private release build generates `SHA256SUMS.txt` from the exact executable copied into `dist`, so the manifest belongs to the same binary being published.
+The private release finalizer generates the ZIP and checksum files from the exact qualified release executable, so the published integrity files belong to the same binary being shipped.
 
 ---
 
@@ -265,7 +268,7 @@ D3D11 is the default production renderer on a fresh configuration and is also th
 
 ### D3D12
 
-D3D12 is available as an optional **production-video renderer** on supported hardware and drivers. In v1.1.1 it does not own a separate application-UI, seek-bar or scrub-preview implementation; those remain on the shared D3D11 interaction path.
+D3D12 is available as an optional **production-video renderer** on supported hardware and drivers. In v1.1.1.1 it does not own a separate application-UI, seek-bar or scrub-preview implementation; those remain on the shared D3D11 interaction path.
 
 With **Unlocked FPS** enabled, the D3D12 producer/presentation policy is genuinely unbounded and nonblocking: monitor refresh is observed for scanout/diagnostics but is not used as an FPS cap. The physical display still receives the freshest completed frame at each DXGI/DWM scanout opportunity.
 

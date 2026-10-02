@@ -8,21 +8,22 @@ Only the latest published stable MJMP release is supported.
 
 Official MJMP binaries are distributed through this repository's **GitHub Releases** page.
 
-Each release is intended to provide:
+For v1.1.1.1, download the portable archive and its generated checksum data:
 
 ```text
-MJMPv1.exe
+MJMPv1.1.1.1.zip
+MJMPv1.1.1.1.zip.sha256
 SHA256SUMS.txt
 ```
 
-Users can verify the executable with:
+Verify the archive with:
 
 ```powershell
-Get-FileHash .\MJMPv1.exe -Algorithm SHA256
+Get-FileHash .\MJMPv1.1.1.1.zip -Algorithm SHA256
 Get-Content .\SHA256SUMS.txt
 ```
 
-The values must match.
+The values must match. The ZIP contains the portable `MJMPv1.1.1.1.exe`.
 
 ## Reporting a vulnerability
 
