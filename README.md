@@ -1,58 +1,404 @@
-# MJMP
+<h1 align="center">MJMP</h1>
 
-**A high-performance, portable Windows x64 multimedia player.**
+<p align="center">
+  <strong>High-performance portable x64 Windows multimedia player with broad codec support and GPU-accelerated playback.</strong>
+</p>
 
-MJMP combines native Windows presentation, responsive playback controls, and a statically linked media stack in a single executable. It uses D3D11 for the application interface and offers D3D11 or D3D12 for production video, subject to hardware and driver support.
+<p align="center">
+<a href="https://github.com/MarceloAlejandroJorquera/MJMP/releases/tag/v1.1.1.2"><img alt="Release v1.1.1.2" src="https://img.shields.io/badge/release-v1.1.1.1-2ea043"></a>&nbsp;
+<a href="https://github.com/MarceloAlejandroJorquera/MJMP/releases/latest"><img alt="Status stable" src="https://img.shields.io/badge/status-stable-2ea043"></a>&nbsp;
+<a href="#system-requirements"><img alt="Platform Windows x64" src="https://img.shields.io/badge/platform-Windows%20x64-0078D4"></a>&nbsp;
+<a href="docs/ARCHITECTURE.md"><img alt="Language C++23" src="https://img.shields.io/badge/language-C%2B%2B23-00599C"></a>&nbsp;
+<a href="docs/ARCHITECTURE.md"><img alt="Compiler MSVC 19.51" src="https://img.shields.io/badge/compiler-MSVC%2019.51-5C2D91"></a>
+</p>
 
-## Latest release — v1.1.1.2
+<p align="center">
+<a href="#d3d11"><img alt="Renderer D3D11 default" src="https://img.shields.io/badge/renderer-D3D11%20default-4B8BBE"></a>&nbsp;
+<a href="#d3d12"><img alt="Renderer D3D12 available" src="https://img.shields.io/badge/renderer-D3D12%20available-6f42c1"></a>&nbsp;
+<a href="https://ffmpeg.org/"><img alt="FFmpeg 9.0.1" src="https://img.shields.io/badge/media-FFmpeg%209.0.1-7E2D2D"></a>&nbsp;
+<a href="https://code.videolan.org/videolan/dav1d"><img alt="AV1 dav1d" src="https://img.shields.io/badge/AV1-dav1d-00897B"></a>&nbsp;
+<a href="https://github.com/fraunhoferhhi/vvdec"><img alt="VVC H.266 VVdeC" src="https://img.shields.io/badge/VVC%20%2F%20H.266-VVdeC-8E44AD"></a>&nbsp;
+<a href="https://lib.openmpt.org/libopenmpt/"><img alt="Tracker modules libopenmpt" src="https://img.shields.io/badge/modules-libopenmpt-3A6EA5"></a>&nbsp;
+<a href="https://learn.microsoft.com/windows/win32/coreaudio/wasapi"><img alt="Audio WASAPI" src="https://img.shields.io/badge/audio-WASAPI-0067B8"></a>
+</p>
 
-**[Download MJMP from GitHub Releases](https://github.com/MarceloAlejandroJorquera/MJMP/releases)**
+<p align="center">
+<a href="https://cmake.org/"><img alt="Build CMake 4.4.3" src="https://img.shields.io/badge/build-CMake%204.4.3-064F8C"></a>&nbsp;
+<a href="https://ninja-build.org/"><img alt="Build Ninja 1.13.2" src="https://img.shields.io/badge/build-Ninja%201.13.2-4EAA25"></a>&nbsp;
+<a href="https://github.com/microsoft/vcpkg"><img alt="Dependencies vcpkg static" src="https://img.shields.io/badge/deps-vcpkg%20static-5C2D91"></a>&nbsp;
+<a href="docs/ARCHITECTURE.md"><img alt="Runtime static MSVC" src="https://img.shields.io/badge/runtime-static%20MSVC-5C2D91"></a>
+</p>
 
-The v1.1.1.2 release provides:
+<p align="center">
+<a href="https://github.com/MarceloAlejandroJorquera/MJMP/releases/latest"><img alt="Portable single EXE" src="https://img.shields.io/badge/distribution-portable%20single%20EXE-444444"></a>&nbsp;
+<a href="#release-integrity"><img alt="SHA-256 release integrity" src="https://img.shields.io/badge/integrity-SHA--256-CB6D17"></a>&nbsp;
+<a href="#update-checks"><img alt="GitHub Releases update checks" src="https://img.shields.io/badge/update%20checks-GitHub%20Releases-24292F"></a>
+</p>
 
-- A **portable x64 executable**, without an installer or external codec pack.
-- A single **D3D11-owned interface** across video renderer choices, including playback controls and seek preview.
-- Optional **D3D12 production-video presentation** on supported systems.
-- Improved playback progress and seek/re-scrub behavior inherited from the v1.1.1 series.
-- Updated statically linked media components: FFmpeg 9.0.1 A2/A3, VVdeC 3.3.0-dev, dav1d, libvpx 1.17.0, libopus 1.6.1, mpg123 1.33.7, and libopenmpt 0.8.9.
-- **Bindings for 72 of 76 listed media extensions**, including `.dsf` and `.dff`. Four ambiguous/unsupported extensions—`.ofr`, `.ofs`, `.raw`, and `.pcm`—remain unavailable for automatic association.
+<p align="center">
+  <a href="https://github.com/MarceloAlejandroJorquera/MJMP/releases/latest"><strong>Download latest release</strong></a>
+  &nbsp;·&nbsp;
+  <a href="CHANGELOG.md">Changelog</a>
+  &nbsp;·&nbsp;
+  <a href="release/MJMP_RELEASE_NOTES_v1.1.1.2.md">v1.1.1.1 release notes</a>
+  &nbsp;·&nbsp;
+  <a href="SECURITY.md">Security</a>
+</p>
 
-**Note:** A selectable extension is not a guarantee of full runtime qualification for every codec variant or container. DSF playback has been observed; DFF/DST and complete D3D11/D3D12 runtime qualification are tracked separately.
+<p align="center">
+  <code>Single EXE</code>
+  ·
+  <code>No installer</code>
+  ·
+  <code>No codec pack required</code>
+  ·
+  <code>Windows x64</code>
+</p>
 
-See the [v1.1.1.2 changelog](release/MJMP_RELEASE_NOTES_v1.1.1.2.md) for release-specific details.
+---
 
-## Download and verify
+<h2 align="center">Overview</h2>
 
-Download the files for the selected version from **Releases**:
+**MJMP** is a portable Windows multimedia player distributed as a **single executable**: `MJMPv1.1.1.2.exe`.
 
-- `MJMPv1.1.1.2.exe` — portable Windows x64 application.
-- `MJMPv1.1.1.2.zip` — binary distribution containing the executable and public release notes.
-- `SHA256SUMS.txt` — published SHA-256 checksums.
+Its media/runtime stack is linked into the application, so users do not need to separately install FFmpeg, a codec pack, libopenmpt, dav1d, VVdeC, or the Microsoft Visual C++ Redistributable.
 
-In Windows PowerShell, verify the executable after downloading it:
+On a fresh configuration, MJMP starts **maximized** and selects **D3D11 by default**. **D3D11 owns the application UI and interaction compositor under both renderer selections**, while **D3D12 remains available as an optional production-video renderer** on capable systems.
+
+**v1.1.1.2 is the latest portable release.** It updates the static FFmpeg 9.0.1 A2/A3 playback stack, synchronizes VVdeC, and refreshes dav1d, libvpx, libopus, mpg123 and libopenmpt while retaining the D3D11 UI and optional D3D12 video renderer.
+
+**Bindings:** 72 of 76 listed extensions are selectable, including `.dsf` and `.dff`; `.ofr`, `.ofs`, `.raw` and `.pcm` remain disabled. DSF playback has been observed, but full DFF/DST and D3D11/D3D12 A4 runtime qualification remains separate from a successful build.
+
+See the [v1.1.1.2 release notes](release/MJMP_RELEASE_NOTES_v1.1.1.2.md) for changes since v1.1.1.1.
+
+<table align="center">
+  <thead>
+    <tr>
+      <th>Area</th>
+      <th>Highlights</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Distribution</strong></td>
+      <td>Portable <code>MJMPv1.1.1.2.exe</code>; no installer; no external codec pack</td>
+    </tr>
+    <tr>
+      <td><strong>Rendering</strong></td>
+      <td>D3D11 application UI + D3D11/D3D12 production-video paths</td>
+    </tr>
+    <tr>
+      <td><strong>Output precision</strong></td>
+      <td>8-bit UNORM, 10-bit RGB, 16-bit-float scRGB</td>
+    </tr>
+    <tr>
+      <td><strong>Playback</strong></td>
+      <td>Source-rate / unlocked presentation modes, seeking and frame/file controls</td>
+    </tr>
+    <tr>
+      <td><strong>Audio</strong></td>
+      <td>WASAPI output with bundled decode/conversion paths</td>
+    </tr>
+    <tr>
+      <td><strong>Subtitles</strong></td>
+      <td>Embedded and sidecar subtitle handling with configurable styling and preview</td>
+    </tr>
+    <tr>
+      <td><strong>Tray</strong></td>
+      <td>Live playback preview, transport controls, pinning and fullscreen expansion</td>
+    </tr>
+    <tr>
+      <td><strong>Library workflow</strong></td>
+      <td>Playlist, history, regex search, hotkeys and configurable interface visibility</td>
+    </tr>
+    <tr>
+      <td><strong>Updates</strong></td>
+      <td>Optional GitHub release checks from <strong>Options → Player → Check new versions</strong></td>
+    </tr>
+    <tr>
+      <td><strong>Integrity</strong></td>
+      <td>SHA-256 manifest published beside each release executable</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+<h2 align="center">Player</h2>
+
+<p align="center">
+  <img src="docs/screenshots/01-player/01-main-player-context-menu.png" alt="MJMP main player and context menu" width="1100">
+</p>
+
+<p align="center">
+  <em>Main player window with MJMP's custom context menu and playback interface.</em>
+</p>
+
+<h3 align="center">Tray playback</h3>
+
+<p align="center">
+  <img src="docs/screenshots/01-player/02-tray-preview.png" alt="MJMP tray playback preview" width="520">
+</p>
+
+<p align="center">
+  <em>Compact tray preview with transport controls, fullscreen expansion and pinning.</em>
+</p>
+
+---
+
+<h2 align="center">Options</h2>
+
+<p align="center">
+  MJMP exposes renderer, playback, subtitle, interface and hotkey configuration through its custom native Options interface.
+</p>
+
+<h3 align="center">Player</h3>
+<p align="center">
+  <img src="docs/screenshots/02-options/01-player.png" alt="MJMP Player options" width="1100">
+</p>
+<p align="center"><em>General behavior, interface visibility and update-check controls.</em></p>
+
+<h3 align="center">Playback</h3>
+<p align="center">
+  <img src="docs/screenshots/02-options/02-playback.png" alt="MJMP Playback options" width="1100">
+</p>
+<p align="center"><em>Playback progress, looping and directory-continuation behavior.</em></p>
+
+<h3 align="center">Video</h3>
+<p align="center">
+  <img src="docs/screenshots/02-options/03-video.png" alt="MJMP Video options" width="1100">
+</p>
+<p align="center"><em>D3D11/D3D12 selection, output precision and presentation controls.</em></p>
+
+<h3 align="center">Subtitles</h3>
+<p align="center">
+  <img src="docs/screenshots/02-options/04-subtitles.png" alt="MJMP Subtitle options" width="1100">
+</p>
+<p align="center"><em>Subtitle font, color, background, alpha and preview controls.</em></p>
+
+<h3 align="center">Hotkeys</h3>
+<p align="center">
+  <img src="docs/screenshots/02-options/05-hotkeys.png" alt="MJMP Hotkey options" width="1100">
+</p>
+<p align="center"><em>Keyboard shortcuts for playback, navigation and interface actions.</em></p>
+<h3 align="center">Bindings</h3>
+<p align="center">
+  <img src="docs/screenshots/02-options/05-bindings.png" alt="MJMP Bindings options" width="1100">
+</p>
+<p align="center"><em>File-association bindings with per-format controls and Bind all support.</em></p>
+
+---
+
+<h2 align="center">Download and run</h2>
+
+1. Open the [latest release](https://github.com/MarceloAlejandroJorquera/MJMP/releases/latest).
+2. Download **`MJMPv1.1.1.2.zip`** and **`SHA256SUMS.txt`**.
+3. Optionally verify the ZIP using the SHA-256 instructions below.
+4. Extract the archive and run **`MJMPv1.1.1.2.exe`** directly.
+
+No installation step is required.
+
+> [!NOTE]
+> Windows may display its normal reputation/security prompt for a newly published unsigned executable. Download MJMP only from this repository's **Releases** page and verify the published SHA-256 checksum when desired.
+
+---
+
+<h2 align="center">Release integrity</h2>
+
+The v1.1.1.2 release provides a portable executable, a binary ZIP, and a SHA-256 integrity manifest:
+
+```text
+MJMPv1.1.1.2.zip
+MJMPv1.1.1.2.exe
+SHA256SUMS.txt
+```
+
+Verify the downloaded archive in PowerShell:
 
 ```powershell
-Get-FileHash .\MJMPv1.1.1.2.exe -Algorithm SHA256
+Get-FileHash .\MJMPv1.1.1.2.zip -Algorithm SHA256
 Get-Content .\SHA256SUMS.txt
 ```
 
-Compare the hash exactly with the checksum manifest from the *same* GitHub release.
+The SHA-256 value returned by `Get-FileHash` must match the `MJMPv1.1.1.2.zip` entry in `SHA256SUMS.txt`. The binary ZIP contains the executable and release notes; no application source, dependency SDKs or private build scripts.
 
-## System requirements
+Verify hashes against the checksum file from the same release. Release compilation alone does not certify every codec and renderer runtime path.
 
-- Windows 10 or Windows 11, **64-bit**.
-- D3D11-capable GPU and driver.
-- D3D12-capable GPU and driver when selecting D3D12 production video.
-- Working Windows audio output.
+---
 
-Hardware acceleration depends on the GPU, driver, codec, profile, and stream. CPU-specific SIMD features use runtime dispatch where supported; AVX2 is not a blanket system requirement.
+<h2 align="center">Portable dependency model</h2>
 
-## Player architecture
+MJMP is built to keep its media/runtime dependencies inside the executable.
 
-The application interface (title bar, transport controls, playback ribbon, and seek interaction) uses a native D3D11 path. D3D12, when selected, is responsible for production video—not the interaction UI. The player keeps the retained progress clock and seek-preview architecture from the v1.1.1 line.
+The current release build uses:
 
-## Distribution and support
+- **C++23**
+- **MSVC 19.51**
+- **CMake 4.4.3**
+- **Ninja 1.13.2**
+- **vcpkg static dependencies**
+- **FFmpeg 9.0.1**
+- **dav1d** static sidecar for AV1 decoding
+- **libvpx 1.17.0** for VP9/high-bit-depth software decoding
+- **VVdeC 3.3.0-dev** (`c8cfd6c49672`) for VVC / H.266 decoding
+- **libopus 1.6.1** for direct Opus decoding
+- **mpg123 1.33.7** for MP3/MPEG audio decoding
+- **libopenmpt 0.8.9** for tracker/module playback
+- **WASAPI** for Windows audio output
+- **D3D11** and **D3D12** rendering paths
+- **static MSVC runtime**
 
-This public repository is for **binary releases and user-facing documentation**. It does not distribute MJMP's private application source code, local build tools, dependency SDKs, or build caches.
+The release executable is intended to depend only on normal Windows system DLLs at runtime rather than third-party codec/runtime DLLs.
 
-For previous versions, changelogs, and downloadable artifacts, use the [Releases page](https://github.com/MarceloAlejandroJorquera/MJMP/releases). For bugs and compatibility reports, use [Issues](https://github.com/MarceloAlejandroJorquera/MJMP/issues) if enabled for the repository.
+This means users do **not** need to separately install:
+
+- FFmpeg
+- LAV Filters
+- K-Lite or another codec pack
+- dav1d
+- VVdeC
+- libopenmpt
+- vcpkg
+- Visual Studio
+- the Microsoft Visual C++ Redistributable
+
+---
+
+<h2 align="center">Rendering</h2>
+
+### D3D11
+
+D3D11 is the default production renderer on a fresh configuration and is also the **single application-UI compositor** for MJMP. Title/ribbon controls, playback/seek UI, interaction feedback and held scrub preview remain on the native D3D11 UI path regardless of the selected production-video renderer.
+
+### D3D12
+
+D3D12 is available as an optional **production-video renderer** on supported hardware and drivers. In v1.1.1.2 it does not own a separate application-UI, seek-bar or scrub-preview implementation; those remain on the shared D3D11 interaction path.
+
+With **Unlocked FPS** enabled, the D3D12 producer/presentation policy is genuinely unbounded and nonblocking: monitor refresh is observed for scanout/diagnostics but is not used as an FPS cap. The physical display still receives the freshest completed frame at each DXGI/DWM scanout opportunity.
+
+Playback-progress publication uses MJMP's retained QPC position with a DWM/display-cadence UI refresh rather than the older coarse retained-clock stepping.
+
+MJMP exposes real output-allocation modes for:
+
+- **8-bit UNORM**
+- **10-bit RGB**
+- **16-bit-float scRGB**
+
+Actual output behavior depends on source media, Windows composition, display configuration, GPU capabilities and driver support.
+
+---
+
+<h2 align="center">Media stack</h2>
+
+MJMP uses its bundled FFmpeg-based media stack together with specialized decoding paths where applicable.
+
+The current project includes infrastructure for:
+
+- **VP9/WebM hardware-first recovery** with D3D11VA/D3D12VA admission and direct libvpx 1.17.0 software fallback;
+
+- common video/audio containers through FFmpeg;
+- H.264 / AVC and H.265 / HEVC playback paths;
+- VP9 playback;
+- AV1 through bundled dav1d support;
+- VVC / H.266 through bundled VVdeC support;
+- tracker/module formats through libopenmpt;
+- embedded artwork;
+- embedded and sidecar subtitles.
+
+Container, profile and hardware-acceleration compatibility can vary by source file, GPU and driver.
+
+---
+
+<h2 align="center">Update checks</h2>
+
+When **Check new versions** is enabled under **Options → Player**:
+
+- the first check occurs about **10 seconds after startup**;
+- a long-running MJMP session rechecks about **every 6 hours**;
+- network work is asynchronous and does not block playback or the UI;
+- the same available release is notified only once per process session;
+- MJMP opens the corresponding GitHub release page;
+- MJMP does **not** automatically download or execute updates.
+
+The update source is this repository:
+
+```text
+MarceloAlejandroJorquera/MJMP
+```
+
+The option can be disabled at any time.
+
+---
+
+<h2 align="center">Public versioning</h2>
+
+MJMP public versions use progressively extended numeric components:
+
+```text
+1
+1.1
+1.1.1
+1.1.1.1
+1.1.1.2
+```
+
+GitHub release tags use the corresponding `v` prefix:
+
+```text
+v1
+v1.1
+v1.1.1
+v1.1.1.1
+v1.1.1.2
+```
+
+---
+
+<h2 align="center">System requirements</h2>
+
+- **64-bit Windows 10 or Windows 11**
+- Working Windows audio stack
+- **D3D11-capable GPU and driver** for the default renderer
+- **D3D12-capable GPU and driver** when selecting D3D12
+
+Hardware acceleration availability varies by codec, GPU and driver.
+
+---
+
+<h2 align="center">Repository scope</h2>
+
+This repository is the **public binary-release repository** for MJMP.
+
+It contains:
+
+- public project documentation;
+- screenshots;
+- release notes;
+- changelog information;
+- release-integrity guidance;
+- public project metadata.
+
+The application executable is distributed through **GitHub Releases** rather than committed to the repository tree.
+
+The public release process excludes the private application source, build trees and dependency caches. Note that historical public Git commits retain older release-helper PowerShell scripts.
+
+---
+
+<h2 align="center">Security</h2>
+
+For vulnerability reporting and security information, see [SECURITY.md](SECURITY.md).
+
+---
+
+<h2 align="center">License</h2>
+
+See [LICENSE.txt](LICENSE.txt).
+
+Third-party components incorporated into MJMP remain subject to their respective licenses.
+
+---
+
+<p align="center">
+  <strong>MJMP</strong><br>
+  Portable Windows multimedia playback.
+</p>
